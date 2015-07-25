@@ -1,0 +1,15 @@
+---
+- name: Install ansible dependencies via apt
+  apt: name=python-httplib2
+       state=present
+  when: package_manager == "apt"
+
+- name: Install ansible dependencies via yum
+  yum: name=python-httplib2
+       state=present
+  when: package_manager == "yum"
+
+- name: Install ansible dependencies via dnf
+  dnf: name=python-httplib2
+       state=present
+  when: package_manager == "dnf"

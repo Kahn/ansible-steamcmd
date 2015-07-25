@@ -1,0 +1,80 @@
+---
+- include: set-package-managers.yml
+- include: ansible-dependancies.yml
+
+- name: Install steamcmd dependencies via apt
+  apt: name=lib32gcc1
+       state=latest
+  when: ansible_architecture == 'x86_64' and package_manager == "apt"
+
+- name: Install steamcmd dependencies via yum
+  yum: name={{ item }}
+       state=latest
+  with_items:
+    - glibc
+    - libstdc++
+  when: ansible_architecture != 'x86_64' and package_manager == "yum"
+
+- name: Install steamcmd dependencies via yum
+  yum: name={{ item }}
+       state=latest
+  with_items:
+    - glibc.i686
+    - libstdc++.i686
+  when: ansible_architecture == 'x86_64' and package_manager == "yum"
+
+- name: Install steamcmd dependencies via dnf
+  dnf: name={{ item }}
+       state=latest
+  with_items:
+    - glibc
+    - libstdc++
+  when: ansible_architecture != 'x86_64' and package_manager == "dnf"
+
+- name: Update Fedora libstdc++
+  dnf: name={{ item }}
+       state=latest
+  with_items:
+    - libstdc++
+  when: ansible_architecture == 'x86_64' and package_manager == "dnf"
+
+- name: Install steamcmd dependencies via dnf
+  dnf: name={{ item }}
+       state=latest
+  with_items:
+    - glibc.i686
+    - libstdc++.i686
+  when: ansible_architecture == 'x86_64' and package_manager == "dnf"
+
+- name: Setup users and groups
+  user: name={{ steamcmd_user }}
+        home={{ steamcmd_user_homedir }}
+        comment="Ansible managed"
+        state=present
+
+- name: Create steamcmd directory
+  file: path={{ steamcmd_user_homedir }}/steamcmd
+        owner={{ steamcmd_user }}
+        group={{ steamcmd_user }}
+        mode=0750
+        state=directory
+
+- name: Download steamcmd archive
+  uri: url={{ steamcmd_url }}
+       dest={{ steamcmd_user_homedir }}/steamcmd/steamcmd_linux.tar.gz
+       creates={{ steamcmd_user_homedir }}/steamcmd/steamcmd_linux.tar.gz
+       owner={{ steamcmd_user }}
+       group={{ steamcmd_user }}
+
+- name: Extract the steamcmd archive
+  unarchive: copy=no
+             src={{ steamcmd_user_homedir }}/steamcmd/steamcmd_linux.tar.gz
+             dest={{ steamcmd_user_homedir }}/steamcmd/
+             owner={{ steamcmd_user }}
+             group={{ steamcmd_user }}
+
+# Must use shell here because Valve expect an interactive stdin
+- name: Run steamcmd
+  shell: echo "quit" | ./steamcmd.sh
+  args:
+    chdir: "{{ steamcmd_user_homedir }}/steamcmd/"

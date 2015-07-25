@@ -1,0 +1,16 @@
+---
+- name: Set debian package_manager
+  set_fact: package_manager="apt"
+  when: ansible_os_family == 'Debian'
+
+- name: Set RHEL package_manager
+  set_fact: package_manager="yum"
+  when: ansible_os_family == 'RedHat' and ansible_distribution != "Fedora"
+
+- name: Set Fedora package_manager
+  set_fact: package_manager="yum"
+  when: ansible_os_family == 'RedHat'  and ansible_distribution == "Fedora" and ansible_distribution_version < 22
+
+- name: Set Fedora package_manager
+  set_fact: package_manager="dnf"
+  when: ansible_os_family == 'RedHat'  and ansible_distribution == "Fedora" and ansible_distribution_version >= 22
