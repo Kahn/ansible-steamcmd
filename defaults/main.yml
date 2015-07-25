@@ -2,3 +2,4 @@
 steamcmd_user: steam
 steamcmd_user_homedir: /home/{{ steamcmd_user }}
 steamcmd_url: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+steamcmd_run_steamcmd: true

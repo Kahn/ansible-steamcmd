@@ -72,9 +72,11 @@
              dest={{ steamcmd_user_homedir }}/steamcmd/
              owner={{ steamcmd_user }}
              group={{ steamcmd_user }}
+             creates={{ steamcmd_user_homedir }}/steamcmd/steamcmd.sh
 
 # Must use shell here because Valve expect an interactive stdin
 - name: Run steamcmd
   shell: echo "quit" | ./steamcmd.sh
+  when: steamcmd_run_steamcmd == "true"
   args:
     chdir: "{{ steamcmd_user_homedir }}/steamcmd/"
