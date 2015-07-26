@@ -1,6 +1,6 @@
 ---
 - include: set-package-managers.yml
-- include: ansible-dependancies.yml
+- include: ansible-dependencies.yml
 
 - name: Install steamcmd dependencies via apt
   apt: name=lib32gcc1
