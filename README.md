@@ -1,38 +1,50 @@
-Role Name
+steamcmd
 =========
 
-A brief description of the role goes here.
+Provides a bootstrapped steamcmd install following Valves [setup guide](https://developer.valvesoftware.com/wiki/SteamCMD).
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+There are no pre-requisites for the steamcmd role.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+```
+# Creates a user to own the steam application.
+steamcmd_user: steam
+# Defines the home directory for the steamcmd_user
+steamcmd_user_homedir: /home/{{ steamcmd_user }}
+# Points to the steamcmd package from Valve
+steamcmd_url: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+# Forces steamcmd to execute, defaults to true to ensure steamcmd is functional before the role exits
+steamcmd_run_steamcmd: true
+```
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+No role dependencies.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+To install steamcmd on your game servers use the following playbook.
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```
+---
+- hosts: steamcmd
+  roles:
+  - kahn.steamcmd
+```
 
 License
 -------
 
-BSD
+GPLv3
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Sam Wilson - [http://www.cycloptivity.net/](http://www.cycloptivity.net/)
